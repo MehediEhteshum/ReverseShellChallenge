@@ -1,7 +1,7 @@
 import socket
 
 # manual edit required
-host = "192.168.1.70"
+host = ""
 port = 45566
 
 try:
