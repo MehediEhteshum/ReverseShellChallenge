@@ -1,7 +1,7 @@
 import socket
 
 # manual edit required
-host = "192.168.1.70"
+host = ""
 port = 45566
 
 try:
@@ -23,35 +23,43 @@ def bind_socket():
 
 def accept_client():
     try:
-        # print(f"Connection from {address} is now established!")
-        while True:
-            # connect with client
-            client, address = s.accept()
-            cmd = input()
-            client.send(str.encode(cmd, "utf-8"))
-            if cmd == "quit":
-                break
-            elif len(cmd) > 0:
-                client_response = client.recv(1024).decode("utf-8")
-                print(client_response, end="")
-            client.close()
+        # connect with client
+        client, address = s.accept()
+        print(f"Connection from {address} is now established!")
+        # send commands to client and process client response
+        send_commands(client)
+        client.close()
         s.close()
     except Exception as e:
         print(f"Client connection error: {e}")
 
 
-# def send_commands(client):
-#     while True:
-#         cmd = input()
-#         if cmd == "quit":
-#             client.send(str.encode(cmd, "utf-8"))
-#             break
-#         elif len(cmd) > 0:
-#             client.send(str.encode(cmd, "utf-8"))
-#             client_response = client.recv(1024).decode("utf-8")
-#             print(client_response, end="")
-#     client.close()
-#     s.close()
+def send_commands(client):
+    # send commands to client and process client response
+    while True:
+        cmd = input()  # give your input command
+        if cmd == "quit":
+            # exits the program on both sides
+            # send command to client (no empty commands)
+            client.send(str.encode(cmd, "utf-8"))
+            break
+        elif len(cmd) > 0:
+            # send command to client (no empty commands)
+            client.send(str.encode(cmd, "utf-8"))
+            # receives client response
+            client_response = client.recv(8).decode("utf-8")
+            while len(client_response) > 0:
+                # receives and accumulataes client full response
+                client.settimeout(0.5)
+                try:
+                    # receives part of response
+                    res_part = client.recv(8).decode("utf-8")
+                except Exception as e:
+                    res_part = ""
+                if len(res_part) <= 0:
+                    break
+                client_response += res_part  # accumulates response
+            print(client_response, end="")
 
 
 def main():
