@@ -3,7 +3,7 @@ import os
 import subprocess
 
 # manual edit required
-host = ""
+host = "192.168.1.70"
 port = 45566
 
 try:
@@ -19,9 +19,11 @@ while True:
         print(f"Command: {cmd}")
         break
     while len(cmd) >= 0:
-        print(cmd)
-        cmd_part = s.recv(8).decode("utf-8")  # stops here, why?
-        print("here")
+        s.settimeout(0.25)
+        try:
+            cmd_part = s.recv(8).decode("utf-8")
+        except Exception as e:
+            cmd_part = ""
         if len(cmd_part) <= 0:
             s.close()
             s = socket.socket()

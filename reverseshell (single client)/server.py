@@ -1,7 +1,7 @@
 import socket
 
 # manual edit required
-host = ""
+host = "192.168.1.70"
 port = 45566
 
 try:
@@ -32,11 +32,8 @@ def accept_client():
             if cmd == "quit":
                 break
             elif len(cmd) > 0:
-                print("here1")
                 client_response = client.recv(1024).decode("utf-8")
-                print("here2")
                 print(client_response, end="")
-            print("here3")
             client.close()
         s.close()
     except Exception as e:
