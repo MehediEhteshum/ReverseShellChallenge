@@ -4,7 +4,7 @@ import subprocess
 
 # manual edit required
 host = ""
-port = 45566
+port = 11123
 
 try:
     # socket creation and connection
